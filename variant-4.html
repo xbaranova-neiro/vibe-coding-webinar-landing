@@ -8,6 +8,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-lottie-frame0.png" fetchpriority="high">
+  <link rel="preload" href="assets/lottie.min.js" as="script">
+  <link rel="preload" href="assets/hero-lottie.json" as="fetch" crossorigin>
+  <script>
+    window.__heroLottiePromise = fetch('assets/hero-lottie.json').then(function (r) {
+      if (!r.ok) throw new Error('hero lottie');
+      return r.json();
+    }).catch(function () { return null; });
+  </script>
   <script>
     (function () {
       var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
@@ -586,65 +594,73 @@
 
   <div class="mobile-bar"><a href="#register" class="btn btn-main">Записаться бесплатно</a></div>
 
-  <script src="assets/lottie.min.js" defer></script>
+  <script src="assets/lottie.min.js"></script>
   <script>
     /* Ссылка на форму регистрации — подставьте свой URL */
     var REGISTRATION_URL = '';
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function bootLottie() {
+      if (!window.lottie) return;
+
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var el = document.getElementById('hero-lottie');
+
+      if (el && !reduce) {
+        var opts = {
+          container: el,
+          renderer: 'canvas',
+          loop: true,
+          autoplay: true,
+          rendererSettings: { clearCanvas: true, preserveAspectRatio: 'xMidYMax meet' }
+        };
+
+        function mount(data) {
+          if (!el.isConnected || !window.lottie) return;
+          var anim = lottie.loadAnimation(data
+            ? Object.assign({}, opts, { animationData: data })
+            : Object.assign({}, opts, { path: 'assets/hero-lottie.json' }));
+          anim.addEventListener('DOMLoaded', function () {
+            el.classList.add('is-ready');
+            anim.play();
+          });
+          anim.addEventListener('data_failed', function () { el.remove(); });
+        }
+
+        if (window.__heroLottiePromise) {
+          window.__heroLottiePromise.then(mount);
+        } else {
+          mount(null);
+        }
+      } else if (el) {
+        el.remove();
+      }
+
+      var eveEl = document.getElementById('cta-eve-lottie');
+      if (eveEl && !reduce) {
+        lottie.loadAnimation({
+          container: eveEl,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/eve-lottie.json'
+        });
+      }
+    }
+
+    function initPage() {
       document.querySelectorAll('[data-reg-link]').forEach(function (a) {
         var base = a.getAttribute('href');
         if (REGISTRATION_URL) base = REGISTRATION_URL;
         if (base && base !== '#') a.href = window.__withUtm(base);
       });
+      bootLottie();
+    }
 
-      function bootLottie() {
-        if (!window.lottie) return;
-
-        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var desktop = window.matchMedia('(min-width: 961px)').matches;
-        var el = document.getElementById('hero-lottie');
-
-        if (el && desktop && !reduce) {
-          var anim = lottie.loadAnimation({
-            container: el,
-            renderer: 'canvas',
-            loop: true,
-            autoplay: true,
-            path: 'assets/hero-lottie.json',
-            rendererSettings: { clearCanvas: true, preserveAspectRatio: 'xMidYMax meet' }
-          });
-          anim.addEventListener('DOMLoaded', function () { el.classList.add('is-ready'); });
-          anim.addEventListener('data_failed', function () { el.remove(); });
-        } else if (el) {
-          el.remove();
-        }
-
-        var eveEl = document.getElementById('cta-eve-lottie');
-        if (eveEl && !reduce) {
-          lottie.loadAnimation({
-            container: eveEl,
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'assets/eve-lottie.json'
-          });
-        }
-      }
-
-      function deferHeavy() {
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(bootLottie, { timeout: 2500 });
-        } else {
-          setTimeout(bootLottie, 1200);
-        }
-      }
-
-      if (document.querySelector('script[src*="lottie"]')) {
-        if (window.lottie) deferHeavy();
-        else document.querySelector('script[src*="lottie"]').addEventListener('load', deferHeavy);
-      }
-    });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPage);
+    } else {
+      initPage();
+    }
 
     /* scroll reveal */
     document.addEventListener('DOMContentLoaded', function () {
