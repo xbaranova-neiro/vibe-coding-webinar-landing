@@ -598,20 +598,26 @@
         if (base && base !== '#') a.href = window.__withUtm(base);
       });
 
+      function shouldLoadHeroAnim() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+        var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (conn && (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g')) return false;
+        return true;
+      }
+
       function bootLottie() {
         if (!window.lottie) return;
 
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var desktop = window.matchMedia('(min-width: 961px)').matches;
         var el = document.getElementById('hero-lottie');
 
-        if (el && desktop && !reduce) {
+        if (el && shouldLoadHeroAnim()) {
           var anim = lottie.loadAnimation({
             container: el,
             renderer: 'canvas',
             loop: true,
             autoplay: true,
-            path: 'assets/hero-lottie.json',
+            path: 'assets/hero-lottie-lite.json',
             rendererSettings: { clearCanvas: true, preserveAspectRatio: 'xMidYMax meet' }
           });
           anim.addEventListener('DOMLoaded', function () { el.classList.add('is-ready'); });
@@ -634,9 +640,9 @@
 
       function deferHeavy() {
         if ('requestIdleCallback' in window) {
-          requestIdleCallback(bootLottie, { timeout: 2500 });
+          requestIdleCallback(bootLottie, { timeout: 800 });
         } else {
-          setTimeout(bootLottie, 1200);
+          setTimeout(bootLottie, 400);
         }
       }
 
