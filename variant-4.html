@@ -337,6 +337,17 @@
     .mobile-bar .btn{ width:100%; justify-content:center; }
     @media(max-width:760px){ .mobile-bar{display:block} body{padding-bottom:84px} }
 
+    /* registration popup (GetCourse widget) */
+    .reg-popup{ position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; padding-bottom:calc(16px + env(safe-area-inset-bottom,0px)); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .25s ease, visibility .25s ease; }
+    .reg-popup.is-open{ opacity:1; visibility:visible; pointer-events:auto; }
+    .reg-popup-backdrop{ position:absolute; inset:0; background:rgba(28,20,38,.58); backdrop-filter:blur(6px); border:0; cursor:pointer; }
+    .reg-popup-panel{ position:relative; z-index:1; width:min(500px,100%); max-height:min(92vh,760px); overflow:auto; -webkit-overflow-scrolling:touch; background:#fff; border-radius:24px; box-shadow:0 28px 90px rgba(28,20,38,.32); padding:44px 16px 20px; }
+    .reg-popup-close{ position:absolute; top:10px; right:10px; width:36px; height:36px; border:0; border-radius:50%; background:rgba(28,20,38,.06); color:var(--ink); font-size:22px; line-height:1; cursor:pointer; display:grid; place-items:center; transition:background .2s; }
+    .reg-popup-close:hover{ background:rgba(28,20,38,.12); }
+    .reg-popup-widget{ overflow:hidden; min-height:80px; }
+    body.reg-popup-open{ overflow:hidden; }
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
     @media(max-width:760px){
       .wrap{ width:min(var(--max), 100% - 28px); }
       section{ padding:48px 0; }
@@ -612,7 +623,7 @@
           </div>
         </div>
         <p class="cta-gifts-note reveal">Пришлём сразу после регистрации — для жизни, семьи и работы</p>
-        <a href="#" class="btn btn-main btn-lg js-reg-link" data-reg-link>Зарегистрироваться бесплатно</a>
+        <a href="#register" class="btn btn-main btn-lg js-reg-open">Зарегистрироваться бесплатно</a>
       </div>
     </div>
   </section>
@@ -643,12 +654,24 @@
     </div>
   </footer>
 
-  <div class="mobile-bar"><a href="#register" class="btn btn-main">Записаться бесплатно</a></div>
+  <div class="mobile-bar"><a href="#register" class="btn btn-main js-reg-open">Записаться бесплатно</a></div>
+
+  <div class="reg-popup" id="reg-popup" aria-hidden="true">
+    <button type="button" class="reg-popup-backdrop" data-reg-close aria-label="Закрыть"></button>
+    <div class="reg-popup-panel" role="dialog" aria-modal="true" aria-labelledby="reg-popup-title">
+      <button type="button" class="reg-popup-close" data-reg-close aria-label="Закрыть">&times;</button>
+      <p id="reg-popup-title" class="sr-only">Регистрация на вебинар</p>
+      <div class="reg-popup-widget" id="reg-widget-host"></div>
+    </div>
+  </div>
 
   <script src="assets/lottie.min.js" defer></script>
   <script>
-    /* Ссылка на форму регистрации — подставьте свой URL */
-    var REGISTRATION_URL = '';
+    /* GetCourse popup widget — форма внутри может быть ещё не готова, тест после настройки в GC */
+    var REG_WIDGET = {
+      scriptId: '1d51f4a68491fe69ee746c99c7f14d37944baa97',
+      src: 'https://neyroseti.neiroguru.ru/pl/lite/widget/script?id=1619826'
+    };
 
     function bootHeroVideo() {
       var video = document.querySelector('.hero-video');
@@ -678,12 +701,67 @@
       });
     }
 
-    function initPage() {
-      document.querySelectorAll('[data-reg-link]').forEach(function (a) {
-        var base = a.getAttribute('href');
-        if (REGISTRATION_URL) base = REGISTRATION_URL;
-        if (base && base !== '#') a.href = window.__withUtm(base);
+    function syncUtmToUrl() {
+      if (!window.__utmParams) return;
+      var params = window.__utmParams();
+      if (!params.toString()) return;
+      try {
+        var url = new URL(location.href);
+        params.forEach(function (v, k) {
+          if (!url.searchParams.has(k)) url.searchParams.set(k, v);
+        });
+        history.replaceState(null, '', url.toString());
+      } catch (e) {}
+    }
+
+    var regWidgetLoaded = false;
+    function loadRegWidget() {
+      if (regWidgetLoaded) return;
+      var host = document.getElementById('reg-widget-host');
+      if (!host || document.getElementById(REG_WIDGET.scriptId)) return;
+      syncUtmToUrl();
+      var s = document.createElement('script');
+      s.id = REG_WIDGET.scriptId;
+      s.src = REG_WIDGET.src + '&rand=' + Date.now();
+      host.appendChild(s);
+      regWidgetLoaded = true;
+    }
+
+    function openRegPopup() {
+      var popup = document.getElementById('reg-popup');
+      if (!popup) return;
+      loadRegWidget();
+      popup.classList.add('is-open');
+      popup.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('reg-popup-open');
+    }
+
+    function closeRegPopup() {
+      var popup = document.getElementById('reg-popup');
+      if (!popup) return;
+      popup.classList.remove('is-open');
+      popup.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('reg-popup-open');
+    }
+
+    function initRegPopup() {
+      document.querySelectorAll('.js-reg-open, a[href="#register"]').forEach(function (a) {
+        a.classList.add('js-reg-open');
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          openRegPopup();
+        });
       });
+      document.querySelectorAll('[data-reg-close]').forEach(function (el) {
+        el.addEventListener('click', closeRegPopup);
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeRegPopup();
+      });
+    }
+
+    function initPage() {
+      initRegPopup();
       bootHeroVideo();
       if (window.lottie) bootEveLottie();
       else {
