@@ -7,6 +7,45 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/hero-lottie-frame0.png" fetchpriority="high">
+  <script>
+    (function () {
+      var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      var q = new URLSearchParams(location.search);
+      var hit = false;
+      KEYS.forEach(function (k) {
+        var v = q.get(k);
+        if (v) { try { sessionStorage.setItem('utm_' + k, v); } catch (e) {} hit = true; }
+      });
+      if (!hit) {
+        KEYS.forEach(function (k) {
+          var v = q.get(k);
+          if (!v) { try { v = sessionStorage.getItem('utm_' + k); } catch (e) {} }
+          if (v) q.set(k, v);
+        });
+      }
+      window.__utmParams = function () {
+        var p = new URLSearchParams();
+        KEYS.forEach(function (k) {
+          var v;
+          try { v = sessionStorage.getItem('utm_' + k); } catch (e) {}
+          if (!v) v = new URLSearchParams(location.search).get(k);
+          if (v) p.set(k, v);
+        });
+        return p;
+      };
+      window.__withUtm = function (url) {
+        if (!url || url.charAt(0) === '#') return url;
+        try {
+          var u = new URL(url, location.href);
+          window.__utmParams().forEach(function (v, k) {
+            if (!u.searchParams.has(k)) u.searchParams.set(k, v);
+          });
+          return u.toString();
+        } catch (e) { return url; }
+      };
+    })();
+  </script>
   <style>
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     :root{
@@ -321,7 +360,7 @@
         </div>
         <div class="hero-photo-wrap">
           <div id="hero-lottie" class="hero-lottie" aria-hidden="true"></div>
-          <img class="hero-photo-fallback" src="assets/hero-lottie-frame0.png" alt="Ведущая вебинара" width="1440" height="1440" loading="eager">
+          <img class="hero-photo-fallback" src="assets/hero-lottie-frame0.png" alt="Ведущая вебинара" width="1440" height="1440" loading="eager" fetchpriority="high" decoding="async">
         </div>
       </div>
     </div>
@@ -514,7 +553,7 @@
             <div class="ds">Для себя, детей, семьи, работы и будущего заработка. Пришлём сразу после регистрации.</div>
           </div>
         </div>
-        <a href="#" class="btn btn-main btn-lg">Зарегистрироваться бесплатно</a>
+        <a href="#" class="btn btn-main btn-lg js-reg-link" data-reg-link>Зарегистрироваться бесплатно</a>
       </div>
     </div>
   </section>
@@ -547,40 +586,63 @@
 
   <div class="mobile-bar"><a href="#register" class="btn btn-main">Записаться бесплатно</a></div>
 
-  <script src="assets/lottie.min.js"></script>
+  <script src="assets/lottie.min.js" defer></script>
   <script>
+    /* Ссылка на форму регистрации — подставьте свой URL */
+    var REGISTRATION_URL = '';
+
     document.addEventListener('DOMContentLoaded', function () {
-      var el = document.getElementById('hero-lottie');
-      if (!el || !window.lottie) return;
-
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var anim = lottie.loadAnimation({
-        container: el,
-        renderer: 'canvas',
-        loop: true,
-        autoplay: !reduce,
-        path: 'assets/hero-lottie.json',
-        rendererSettings: { clearCanvas: true, preserveAspectRatio: 'xMidYMax meet' }
+      document.querySelectorAll('[data-reg-link]').forEach(function (a) {
+        var base = a.getAttribute('href');
+        if (REGISTRATION_URL) base = REGISTRATION_URL;
+        if (base && base !== '#') a.href = window.__withUtm(base);
       });
 
-      anim.addEventListener('DOMLoaded', function () {
-        el.classList.add('is-ready');
-        if (!reduce) anim.play();
-      });
+      function bootLottie() {
+        if (!window.lottie) return;
 
-      anim.addEventListener('data_failed', function () {
-        el.remove();
-      });
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var desktop = window.matchMedia('(min-width: 961px)').matches;
+        var el = document.getElementById('hero-lottie');
 
-      var eveEl = document.getElementById('cta-eve-lottie');
-      if (eveEl) {
-        lottie.loadAnimation({
-          container: eveEl,
-          renderer: 'svg',
-          loop: true,
-          autoplay: !reduce,
-          path: 'assets/eve-lottie.json'
-        });
+        if (el && desktop && !reduce) {
+          var anim = lottie.loadAnimation({
+            container: el,
+            renderer: 'canvas',
+            loop: true,
+            autoplay: true,
+            path: 'assets/hero-lottie.json',
+            rendererSettings: { clearCanvas: true, preserveAspectRatio: 'xMidYMax meet' }
+          });
+          anim.addEventListener('DOMLoaded', function () { el.classList.add('is-ready'); });
+          anim.addEventListener('data_failed', function () { el.remove(); });
+        } else if (el) {
+          el.remove();
+        }
+
+        var eveEl = document.getElementById('cta-eve-lottie');
+        if (eveEl && !reduce) {
+          lottie.loadAnimation({
+            container: eveEl,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'assets/eve-lottie.json'
+          });
+        }
+      }
+
+      function deferHeavy() {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(bootLottie, { timeout: 2500 });
+        } else {
+          setTimeout(bootLottie, 1200);
+        }
+      }
+
+      if (document.querySelector('script[src*="lottie"]')) {
+        if (window.lottie) deferHeavy();
+        else document.querySelector('script[src*="lottie"]').addEventListener('load', deferHeavy);
       }
     });
 
