@@ -88,7 +88,7 @@
     body{ font-family:'Onest',system-ui,sans-serif; font-size:17px; line-height:1.62; color:var(--ink-soft); background:var(--bg); -webkit-font-smoothing:antialiased; overflow-x:hidden; position:relative; }
     .wrap{ width:min(var(--max),100% - 44px); margin-inline:auto; position:relative; z-index:1; }
     h1,h2,h3{ color:var(--ink); font-weight:800; letter-spacing:-.03em; line-height:1.06; text-wrap:balance; }
-    .serif{ font-family:'Playfair Display',serif; font-weight:500; font-style:italic; letter-spacing:0; }
+    .serif{ font-family:'Playfair Display',serif; font-weight:500; font-style:italic; letter-spacing:0; font-size:0.94em; }
 
     .iri{ background:linear-gradient(110deg,var(--w1),var(--w2) 28%,var(--w3) 56%,var(--w4) 82%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 
@@ -160,7 +160,7 @@
     .sec-head{ max-width:680px; margin:0 auto 56px; text-align:center; }
     .eyebrow{ font-size:12px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; display:block; }
     h2{ font-size:clamp(2.1rem,4.6vw,3.3rem); margin-bottom:14px; }
-    .sec-desc{ color:var(--muted); font-size:1.08rem; max-width:48ch; margin-inline:auto; }
+    .sec-desc{ color:var(--muted); font-size:1.05rem; max-width:48ch; margin-inline:auto; }
 
     /* section CTA */
     .sec-cta{ display:flex; justify-content:center; margin-top:42px; }
@@ -196,17 +196,17 @@
     @media(max-width:720px){ .pain-grid{ grid-template-columns:1fr; } }
     .pain-card{ display:flex; gap:16px; align-items:flex-start; padding:22px 24px; }
     .pain-card .ico{ font-size:1.45rem; line-height:1.2; flex-shrink:0; }
-    .pain-card p{ font-size:15px; color:var(--ink-soft); line-height:1.52; }
+    .pain-card p{ font-size:15.5px; color:var(--ink-soft); line-height:1.55; }
     .pain-quote{ max-width:920px; margin:0 auto 16px; padding:30px 34px; text-align:center; }
     .pain-quote .lead{ font-size:15px; color:var(--muted); margin-bottom:10px; }
-    .pain-quote .thought{ font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(1.25rem,2.8vw,1.65rem); color:var(--ink); line-height:1.35; max-width:34ch; margin-inline:auto; }
+    .pain-quote .thought{ font-family:'Playfair Display',serif; font-weight:500; font-style:italic; letter-spacing:0; font-size:clamp(1.3rem,2.8vw,1.7rem); color:var(--ink); line-height:1.4; max-width:34ch; margin-inline:auto; }
     .pain-idea{ max-width:920px; margin:0 auto 44px; padding:22px 24px; display:flex; gap:16px; align-items:flex-start; }
     .pain-idea .ico{ font-size:1.45rem; flex-shrink:0; }
     .pain-idea p{ font-size:15px; color:var(--ink-soft); line-height:1.52; }
     .pain-shift{ max-width:680px; margin:0 auto; text-align:center; }
     .pain-shift .was{ font-size:1.05rem; color:var(--muted); line-height:1.6; margin-bottom:30px; padding-bottom:30px; border-bottom:1px solid var(--line); }
     .pain-shift .good-label{ display:block; font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
-    .pain-shift .good p{ font-size:1.12rem; color:var(--ink); line-height:1.58; }
+    .pain-shift .good p{ font-size:1.08rem; color:var(--ink); line-height:1.55; }
     .pain-shift .good .fin{ margin-top:18px; font-weight:700; font-size:1.05rem; color:var(--accent-deep); }
 
     /* come if you want */
@@ -218,8 +218,8 @@
     }
     .want-item{ display:flex; gap:14px; align-items:flex-start; padding:24px 26px; height:100%; }
     .want-item .dot{ width:10px; height:10px; border-radius:50%; background:linear-gradient(135deg,var(--w1),var(--w3)); flex-shrink:0; margin-top:8px; box-shadow:0 0 0 4px rgba(91,141,239,.12); }
-    .want-item p{ font-size:1.04rem; font-weight:600; color:var(--ink); line-height:1.45; }
-    .want-foot{ max-width:640px; margin:0 auto; text-align:center; padding:28px 34px; font-size:1.08rem; font-weight:600; color:var(--ink); line-height:1.55; }
+    .want-item p{ font-size:1.05rem; font-weight:600; color:var(--ink); line-height:1.5; }
+    .want-foot{ max-width:640px; margin:0 auto; text-align:center; padding:28px 34px; font-size:1.05rem; font-weight:600; color:var(--ink); line-height:1.55; }
 
     /* creations */
     .cre-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
@@ -267,9 +267,9 @@
     .host-award .t{ font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#9A6A12; }
     .host-award .s{ font-size:13.5px; color:var(--ink); font-weight:600; margin-top:2px; line-height:1.35; }
     .host-facts{ list-style:none; display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
-    .host-facts li{ display:flex; gap:12px; align-items:flex-start; font-size:15px; color:var(--ink); line-height:1.45; }
+    .host-facts li{ display:flex; gap:12px; align-items:flex-start; font-size:15.5px; color:var(--ink); line-height:1.5; }
     .host-facts .ck{ width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,var(--w2),var(--w4)); color:#fff; display:grid; place-items:center; font-size:11px; font-weight:800; flex-shrink:0; margin-top:1px; }
-    .host-lead{ font-size:1.02rem; color:var(--ink-soft); margin-bottom:22px; line-height:1.55; max-width:48ch; }
+    .host-lead{ font-size:1.05rem; color:var(--ink-soft); margin-bottom:22px; line-height:1.55; max-width:48ch; }
     .host-tags{ display:flex; flex-wrap:wrap; gap:10px; }
     .host-tags span{ font-size:12.5px; font-weight:600; color:var(--accent-deep); background:#fff; border:1.5px solid rgba(78,99,230,.22); padding:8px 14px; border-radius:100px; }
 
@@ -278,13 +278,13 @@
     .agenda-item{ display:flex; gap:20px; align-items:flex-start; padding:28px 30px; }
     .agenda-item .ico{ font-size:1.55rem; line-height:1.2; flex-shrink:0; }
     .agenda-item h3{ font-size:1.1rem; margin-bottom:8px; line-height:1.35; color:var(--ink); }
-    .agenda-item p{ font-size:15px; color:var(--ink-soft); line-height:1.55; }
+    .agenda-item p{ font-size:15.5px; color:var(--ink-soft); line-height:1.55; }
     .agenda-item.no-desc h3{ margin-bottom:0; }
     .agenda-item.highlight{ background:linear-gradient(135deg,rgba(91,141,239,.09),rgba(111,227,194,.08)); border-color:rgba(78,99,230,.18); }
 
     /* quote */
     .qband{ text-align:center; }
-    .qband blockquote{ font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(1.9rem,4.8vw,3.1rem); color:var(--ink); max-width:20ch; margin:0 auto; line-height:1.18; font-weight:500; }
+    .qband blockquote{ font-family:'Playfair Display',serif; font-weight:500; font-style:italic; letter-spacing:0; font-size:clamp(1.8rem,4.4vw,2.8rem); color:var(--ink); max-width:22ch; margin:0 auto; line-height:1.22; }
     .qband .src{ margin-top:20px; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
 
     /* CTA */
@@ -294,7 +294,7 @@
     .cta-box .glow.g1{ background:var(--w2); top:-130px; left:-60px; } .cta-box .glow.g2{ background:var(--w4); bottom:-150px; right:-60px; }
     .cta-box .eyebrow{ color:var(--accent); }
     .cta-box h2{ color:var(--ink); font-size:clamp(2.3rem,5.2vw,3.4rem); margin-bottom:14px; position:relative; }
-    .cta-box p{ color:var(--ink-soft); font-size:1.1rem; max-width:460px; margin:0 auto 28px; position:relative; }
+    .cta-box p{ color:var(--ink-soft); font-size:1.05rem; max-width:460px; margin:0 auto 28px; position:relative; }
     .cta-box .meta{ display:flex; justify-content:center; gap:26px; margin-bottom:32px; flex-wrap:wrap; font-weight:700; color:var(--ink); position:relative; }
     .cta-box .meta div{ display:inline-flex; align-items:center; gap:8px; }
     .cta-box .meta .m-ic{ width:18px; height:18px; stroke:var(--accent); stroke-width:1.8; fill:none; stroke-linecap:round; stroke-linejoin:round; }
