@@ -8,14 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-lottie-frame0.png" fetchpriority="high">
-  <link rel="preload" href="assets/lottie.min.js" as="script">
-  <link rel="preload" href="assets/hero-lottie.json" as="fetch" crossorigin>
-  <script>
-    window.__heroLottiePromise = fetch('assets/hero-lottie.json').then(function (r) {
-      if (!r.ok) throw new Error('hero lottie');
-      return r.json();
-    }).catch(function () { return null; });
-  </script>
   <script>
     (function () {
       var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
@@ -112,9 +104,8 @@
     .hero-stage::before{ content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(102deg,#fff 0%,#fff 46%,rgba(255,255,255,.85) 58%,rgba(255,255,255,.4) 70%,transparent 82%); }
     .hero-photo-wrap{ position:absolute; right:0; top:0; bottom:0; width:min(52%,680px); height:100%; min-height:min(88vh,820px); z-index:1; pointer-events:none; display:flex; align-items:flex-end; justify-content:center; background:#fff; }
     .hero-photo-fallback{ position:relative; z-index:1; width:100%; height:100%; max-width:none; max-height:none; object-fit:contain; object-position:center bottom; display:block; transform:scale(1.14); transform-origin:center bottom; }
-    .hero-lottie{ position:absolute; inset:0; z-index:1; display:flex; align-items:flex-end; justify-content:center; transform:scale(1.14); transform-origin:center bottom; }
-    .hero-lottie.is-ready + .hero-photo-fallback{ opacity:0; visibility:hidden; }
-    .hero-lottie canvas,.hero-lottie svg{ width:100%!important; height:100%!important; max-height:none!important; display:block; }
+    .hero-video{ position:absolute; inset:0; z-index:2; width:100%; height:100%; object-fit:contain; object-position:center bottom; display:block; transform:scale(1.14); transform-origin:center bottom; background:#fff; }
+    .hero-video.is-ready + .hero-photo-fallback{ opacity:0; visibility:hidden; }
     .hero-copy{ position:relative; z-index:3; max-width:min(58%,640px); padding:48px 0 64px; }
     .pill{ display:inline-flex; align-items:center; gap:9px; font-size:13px; font-weight:700; color:var(--accent-deep); background:var(--glass-2); border:1px solid var(--line); padding:9px 16px; border-radius:100px; margin-bottom:24px; box-shadow:var(--sh-soft); }
     .pill .dot{ width:8px; height:8px; border-radius:50%; background:linear-gradient(135deg,var(--w1),var(--w3)); }
@@ -133,8 +124,7 @@
       .hero-stage::before{ display:none; }
       .hero-photo-wrap{ position:relative; width:min(78vw,380px); min-height:auto; height:auto; margin:0 auto; transform:none; }
       .hero-photo-fallback{ height:auto; max-height:min(52vh,420px); margin:0 auto; transform:none; }
-      .hero-lottie{ transform:none; }
-      .hero-lottie canvas,.hero-lottie svg{ height:auto!important; max-height:min(52vh,420px)!important; }
+      .hero-video{ transform:none; max-height:min(52vh,420px); margin:0 auto; }
       .hero-copy{ max-width:100%; padding:0 0 36px; }
     }
     .ava-row{ display:flex; }
@@ -367,7 +357,7 @@
           </div>
         </div>
         <div class="hero-photo-wrap">
-          <div id="hero-lottie" class="hero-lottie" aria-hidden="true"></div>
+          <video class="hero-video" src="assets/hero-video.mp4" poster="assets/hero-lottie-frame0.png" autoplay loop muted playsinline preload="none" aria-hidden="true"></video>
           <img class="hero-photo-fallback" src="assets/hero-lottie-frame0.png" alt="Ведущая вебинара" width="1440" height="1440" loading="eager" fetchpriority="high" decoding="async">
         </div>
       </div>
@@ -594,57 +584,37 @@
 
   <div class="mobile-bar"><a href="#register" class="btn btn-main">Записаться бесплатно</a></div>
 
-  <script src="assets/lottie.min.js"></script>
+  <script src="assets/lottie.min.js" defer></script>
   <script>
     /* Ссылка на форму регистрации — подставьте свой URL */
     var REGISTRATION_URL = '';
 
-    function bootLottie() {
+    function bootHeroVideo() {
+      var video = document.querySelector('.hero-video');
+      if (!video) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      function showVideo() {
+        video.classList.add('is-ready');
+        video.play().catch(function () {});
+      }
+
+      if (video.readyState >= 2) showVideo();
+      else video.addEventListener('canplay', showVideo, { once: true });
+    }
+
+    function bootEveLottie() {
       if (!window.lottie) return;
-
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var el = document.getElementById('hero-lottie');
-
-      if (el && !reduce) {
-        var opts = {
-          container: el,
-          renderer: 'canvas',
-          loop: true,
-          autoplay: true,
-          rendererSettings: { clearCanvas: true, preserveAspectRatio: 'xMidYMax meet' }
-        };
-
-        function mount(data) {
-          if (!el.isConnected || !window.lottie) return;
-          var anim = lottie.loadAnimation(data
-            ? Object.assign({}, opts, { animationData: data })
-            : Object.assign({}, opts, { path: 'assets/hero-lottie.json' }));
-          anim.addEventListener('DOMLoaded', function () {
-            el.classList.add('is-ready');
-            anim.play();
-          });
-          anim.addEventListener('data_failed', function () { el.remove(); });
-        }
-
-        if (window.__heroLottiePromise) {
-          window.__heroLottiePromise.then(mount);
-        } else {
-          mount(null);
-        }
-      } else if (el) {
-        el.remove();
-      }
-
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var eveEl = document.getElementById('cta-eve-lottie');
-      if (eveEl && !reduce) {
-        lottie.loadAnimation({
-          container: eveEl,
-          renderer: 'svg',
-          loop: true,
-          autoplay: true,
-          path: 'assets/eve-lottie.json'
-        });
-      }
+      if (!eveEl) return;
+      lottie.loadAnimation({
+        container: eveEl,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'assets/eve-lottie.json'
+      });
     }
 
     function initPage() {
@@ -653,7 +623,12 @@
         if (REGISTRATION_URL) base = REGISTRATION_URL;
         if (base && base !== '#') a.href = window.__withUtm(base);
       });
-      bootLottie();
+      bootHeroVideo();
+      if (window.lottie) bootEveLottie();
+      else {
+        var lottieScript = document.querySelector('script[src*="lottie"]');
+        if (lottieScript) lottieScript.addEventListener('load', bootEveLottie);
+      }
     }
 
     if (document.readyState === 'loading') {
