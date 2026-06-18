@@ -286,7 +286,6 @@
     /* CTA */
     .cta{ padding-bottom:100px; background:#fff; }
     .cta-box{ position:relative; overflow:hidden; border-radius:40px; padding:64px 48px 74px; text-align:center; color:var(--ink-soft); background:#fff; border:1px solid var(--line); box-shadow:var(--sh-soft); width:100%; }
-    @media(max-width:560px){ .cta-box{ padding:52px 26px 56px; } }
     .cta-box .glow{ position:absolute; width:360px; height:360px; border-radius:50%; filter:blur(80px); opacity:.22; pointer-events:none; }
     .cta-box .glow.g1{ background:var(--w2); top:-130px; left:-60px; } .cta-box .glow.g2{ background:var(--w4); bottom:-150px; right:-60px; }
     .cta-box .eyebrow{ color:var(--accent); }
@@ -333,6 +332,55 @@
     .mobile-bar{ display:none; position:fixed; bottom:0; left:0; right:0; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--glass-2); backdrop-filter:blur(18px); border-top:1px solid var(--line); z-index:50; }
     .mobile-bar .btn{ width:100%; justify-content:center; }
     @media(max-width:760px){ .mobile-bar{display:block} body{padding-bottom:84px} }
+
+    @media(max-width:760px){
+      .wrap{ width:min(var(--max), 100% - 28px); }
+      section{ padding:48px 0; }
+      .sec-head{ margin-bottom:28px; }
+      .eyebrow{ margin-bottom:10px; }
+      h2{ margin-bottom:10px; }
+      .sec-cta{ margin-top:24px; }
+
+      .hero{ padding-top:28px; }
+      .hero h1{ margin-bottom:14px; }
+      .hero-sub{ margin-bottom:18px; font-size:1rem; }
+      .hero-gift-card{ margin-bottom:16px; }
+      .hero-trust{ margin-top:16px; }
+      .hero-copy{ padding-bottom:24px; }
+
+      .pain-quote{ padding:20px 18px; margin-bottom:12px; }
+      .pain-card{ padding:16px 18px; }
+      .pain-shift .was{ margin-bottom:18px; padding-bottom:18px; }
+      .pain-shift .good .fin{ margin-top:12px; }
+
+      .want-grid{ margin-bottom:20px; gap:12px; }
+      .want-item{ padding:16px 18px; }
+      .want-foot{ padding:18px 20px; }
+
+      .cre{ padding:14px; }
+
+      .host-body{ padding:24px 20px; }
+      .host-photo{ min-height:260px; padding:16px 16px 0; }
+      .host-name{ margin-bottom:12px; }
+      .host-award{ margin-bottom:14px; }
+      .host-facts{ margin-bottom:14px; gap:10px; }
+      .host-lead{ margin-bottom:14px; }
+
+      .agenda-item{ padding:18px 16px; gap:14px; }
+
+      .qband blockquote{ font-size:clamp(1.45rem,5.8vw,1.9rem); }
+      .qband .src{ margin-top:12px; }
+
+      .cta{ padding:48px 0 56px; }
+      .cta-box{ padding:36px 20px 40px; border-radius:28px; }
+      .cta-box h2{ margin-bottom:10px; }
+      .cta-box p{ margin-bottom:18px; font-size:1rem; }
+      .cta-box .meta{ margin-bottom:20px; gap:14px; }
+      .cta-gifts-note{ margin-bottom:18px; }
+      .cta-mascot{ margin-bottom:-28px; }
+
+      .site-footer-top{ padding:32px 0 24px; gap:24px; }
+    }
   </style>
 </head>
 <body>
