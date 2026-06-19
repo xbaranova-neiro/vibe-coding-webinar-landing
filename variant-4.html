@@ -427,7 +427,7 @@
     }
     @keyframes reg-spin{ to{ transform:rotate(360deg); } }
     html.reg-popup-open,
-    body.reg-popup-open{ overflow:hidden; }
+    body.reg-popup-open{ overflow:hidden!important; overscroll-behavior:none; touch-action:none; }
     body.reg-popup-open .mobile-bar{ opacity:0; pointer-events:none; }
     .mobile-bar{ transition:opacity .2s ease; }
     .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
@@ -851,29 +851,30 @@
       if (host) host.classList.add('is-ready');
     }
 
+    var regTouchBlocker = null;
+
     function lockPageScroll() {
       regScrollY = window.scrollY || window.pageYOffset || 0;
       var scrollbar = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.paddingRight = scrollbar > 0 ? scrollbar + 'px' : '';
       document.documentElement.classList.add('reg-popup-open');
       document.body.classList.add('reg-popup-open');
-      document.body.style.top = '-' + regScrollY + 'px';
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
-      document.body.style.position = 'fixed';
+      regTouchBlocker = function (ev) {
+        var panel = document.querySelector('.reg-popup-panel');
+        if (panel && panel.contains(ev.target)) return;
+        ev.preventDefault();
+      };
+      document.addEventListener('touchmove', regTouchBlocker, { passive: false });
     }
 
     function unlockPageScroll() {
       document.documentElement.classList.remove('reg-popup-open');
       document.body.classList.remove('reg-popup-open');
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.width = '';
       document.body.style.paddingRight = '';
-      window.scrollTo(0, regScrollY);
+      if (regTouchBlocker) {
+        document.removeEventListener('touchmove', regTouchBlocker);
+        regTouchBlocker = null;
+      }
     }
 
     function fitRegPopupViewport() {
@@ -974,7 +975,7 @@
       popup.classList.remove('is-open');
       popup.setAttribute('aria-hidden', 'true');
       resetRegPopupViewport();
-      window.setTimeout(unlockPageScroll, 220);
+      unlockPageScroll();
     }
 
     function initRegWidgetMessages() {
