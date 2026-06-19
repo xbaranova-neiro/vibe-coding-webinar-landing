@@ -568,7 +568,7 @@
           </div>
         </div>
         <div class="hero-photo-wrap">
-          <video class="hero-video" src="assets/hero-video.mp4" poster="assets/hero-lottie-frame0.png" autoplay loop muted playsinline preload="none" aria-hidden="true"></video>
+          <video class="hero-video" src="assets/hero-video.mp4" poster="assets/hero-lottie-frame0.png" autoplay loop muted playsinline webkit-playsinline preload="metadata" aria-hidden="true"></video>
           <img class="hero-photo-fallback" src="assets/hero-lottie-frame0.png" alt="Ведущая вебинара" width="1440" height="1440" loading="eager" fetchpriority="high" decoding="async">
         </div>
       </div>
@@ -801,13 +801,102 @@
       if (!video) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      function showVideo() {
-        video.classList.add('is-ready');
-        video.play().catch(function () {});
+      var started = false;
+      var gestureBound = false;
+      var blobUrl = null;
+
+      function prepVideo() {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.setAttribute('muted', '');
+        video.playsInline = true;
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
       }
 
-      if (video.readyState >= 2) showVideo();
-      else video.addEventListener('canplay', showVideo, { once: true });
+      function tryPlay() {
+        prepVideo();
+        var playPromise = video.play();
+        if (playPromise && playPromise.catch) {
+          playPromise.catch(function () {
+            bindGestureRetry();
+          });
+        }
+      }
+
+      function showVideo() {
+        video.classList.add('is-ready');
+        tryPlay();
+      }
+
+      function bindGestureRetry() {
+        if (gestureBound) return;
+        gestureBound = true;
+        function retry() {
+          tryPlay();
+        }
+        document.addEventListener('touchstart', retry, { once: true, capture: true, passive: true });
+        document.addEventListener('click', retry, { once: true, capture: true });
+      }
+
+      function isTelegramIOS() {
+        return /Telegram/i.test(navigator.userAgent) && /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      }
+
+      function beginLoad() {
+        if (started) return;
+        started = true;
+        prepVideo();
+
+        function onReady() {
+          showVideo();
+        }
+
+        video.addEventListener('canplay', onReady, { once: true });
+        video.addEventListener('loadeddata', onReady, { once: true });
+        video.addEventListener('error', function () {
+          if (blobUrl) return;
+          loadHeroVideoBlob();
+        }, { once: true });
+
+        if (video.readyState >= 2) {
+          onReady();
+          return;
+        }
+
+        if (isTelegramIOS()) {
+          loadHeroVideoBlob();
+          return;
+        }
+
+        try {
+          video.load();
+        } catch (e) {}
+      }
+
+      function loadHeroVideoBlob() {
+        var src = video.getAttribute('src');
+        if (!src || !window.fetch) return;
+        fetch(src)
+          .then(function (res) {
+            if (!res.ok) throw new Error('fetch failed');
+            return res.blob();
+          })
+          .then(function (blob) {
+            blobUrl = URL.createObjectURL(blob);
+            video.src = blobUrl;
+            video.load();
+          })
+          .catch(function () {});
+      }
+
+      beginLoad();
+
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden && video.classList.contains('is-ready') && video.paused) {
+          tryPlay();
+        }
+      });
     }
 
     function bootEveLottie() {
