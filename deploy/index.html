@@ -360,11 +360,16 @@
       position:fixed; inset:0; z-index:200;
       display:flex; align-items:center; justify-content:center;
       padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
-      opacity:0; visibility:hidden; pointer-events:none;
-      transition:opacity .25s ease, visibility .25s ease;
+      visibility:hidden; pointer-events:none;
     }
-    .reg-popup.is-open{ opacity:1; visibility:visible; pointer-events:auto; }
-    .reg-popup-backdrop{ position:absolute; inset:0; background:rgba(28,20,38,.58); backdrop-filter:blur(6px); border:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .reg-popup.is-open{ visibility:visible; pointer-events:auto; }
+    .reg-popup-backdrop{
+      position:absolute; inset:0;
+      background:rgba(28,20,38,.58); backdrop-filter:blur(6px);
+      border:0; cursor:pointer; -webkit-tap-highlight-color:transparent;
+      opacity:0; transition:opacity .28s ease;
+    }
+    .reg-popup.is-open .reg-popup-backdrop{ opacity:1; }
     .reg-popup-panel{
       position:relative; z-index:1;
       width:min(500px, 100%);
@@ -374,6 +379,13 @@
       background:#fff; border-radius:24px;
       box-shadow:0 28px 90px rgba(28,20,38,.32);
       padding:44px 16px 20px;
+      opacity:0;
+      transform:translateY(14px) scale(.98);
+      transition:opacity .28s ease, transform .32s cubic-bezier(.22,.61,.36,1);
+      will-change:transform, opacity;
+    }
+    .reg-popup.is-open .reg-popup-panel{
+      opacity:1; transform:none;
     }
     .reg-popup-close{
       position:absolute; top:10px; right:10px; z-index:2;
@@ -386,10 +398,38 @@
       touch-action:manipulation; -webkit-tap-highlight-color:transparent;
     }
     .reg-popup-close:hover{ background:rgba(28,20,38,.12); }
-    .reg-popup-widget{ overflow:hidden; min-height:80px; width:100%; }
-    .reg-popup-widget iframe{ display:block; width:100%!important; max-width:100%!important; border:0; }
+    .reg-popup-widget{
+      position:relative;
+      overflow:hidden;
+      width:100%;
+      min-height:480px;
+      transition:height .22s ease;
+    }
+    .reg-popup-widget iframe{
+      display:block; width:100%!important; max-width:100%!important; border:0;
+      opacity:0; transition:opacity .25s ease .05s;
+    }
+    .reg-popup-widget.is-ready iframe{ opacity:1; }
+    .reg-popup-loader{
+      position:absolute; inset:0; z-index:1;
+      display:grid; place-items:center;
+      background:#fff;
+      transition:opacity .2s ease, visibility .2s ease;
+    }
+    .reg-popup-widget.is-ready .reg-popup-loader{
+      opacity:0; visibility:hidden; pointer-events:none;
+    }
+    .reg-popup-loader::after{
+      content:''; width:36px; height:36px; border-radius:50%;
+      border:3px solid rgba(78,99,230,.18);
+      border-top-color:var(--accent);
+      animation:reg-spin .75s linear infinite;
+    }
+    @keyframes reg-spin{ to{ transform:rotate(360deg); } }
+    html.reg-popup-open,
     body.reg-popup-open{ overflow:hidden; }
     body.reg-popup-open .mobile-bar{ opacity:0; pointer-events:none; }
+    .mobile-bar{ transition:opacity .2s ease; }
     .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     @media(max-width:760px){
       .reg-popup{ align-items:flex-end; justify-content:stretch; padding:0; }
@@ -399,23 +439,34 @@
         border-radius:20px 20px 0 0;
         padding:12px 12px max(16px, env(safe-area-inset-bottom));
         box-shadow:0 -8px 40px rgba(28,20,38,.18);
+        transform:translateY(100%);
+        transition:transform .34s cubic-bezier(.22,.61,.36,1), opacity .28s ease;
       }
+      .reg-popup.is-open .reg-popup-panel{ transform:none; opacity:1; }
       .reg-popup-close{
         top:max(10px, env(safe-area-inset-top)); right:max(10px, env(safe-area-inset-right));
         width:44px; height:44px;
       }
-      .reg-popup-widget{ min-height:120px; }
+      .reg-popup-widget{ min-height:min(72dvh, 560px); }
     }
     @media(max-height:520px) and (orientation:landscape){
       .reg-popup{ align-items:center; padding:8px; }
       .reg-popup-panel{
         width:min(520px, 100%); max-height:min(96dvh, 96vh);
         border-radius:16px; padding:40px 14px 14px;
+        transform:translateY(10px) scale(.98);
       }
+      .reg-popup.is-open .reg-popup-panel{ transform:none; }
       .reg-popup-close{ top:8px; right:8px; width:40px; height:40px; }
+      .reg-popup-widget{ min-height:320px; }
     }
     @media(prefers-reduced-motion:reduce){
-      .reg-popup{ transition:none; }
+      .reg-popup-backdrop,
+      .reg-popup-panel,
+      .reg-popup-widget,
+      .reg-popup-widget iframe{ transition:none!important; animation:none!important; }
+      .reg-popup-panel{ transform:none!important; opacity:1!important; }
+      .reg-popup:not(.is-open) .reg-popup-panel{ opacity:0; }
     }
 
     @media(max-width:760px){
@@ -731,7 +782,9 @@
     <div class="reg-popup-panel" role="dialog" aria-modal="true" aria-labelledby="reg-popup-title">
       <button type="button" class="reg-popup-close" data-reg-close aria-label="Закрыть">&times;</button>
       <p id="reg-popup-title" class="sr-only">Регистрация на вебинар</p>
-      <div class="reg-popup-widget" id="reg-widget-host"></div>
+      <div class="reg-popup-widget" id="reg-widget-host">
+        <div class="reg-popup-loader" aria-hidden="true"></div>
+      </div>
     </div>
   </div>
 
@@ -785,10 +838,25 @@
     }
 
     var regWidgetBooted = false;
+    var regWidgetPreloading = false;
     var regScrollY = 0;
+    var regViewportTimer = null;
+
+    function getRegWidgetHost() {
+      return document.getElementById('reg-widget-host');
+    }
+
+    function markRegWidgetReady() {
+      var host = getRegWidgetHost();
+      if (host) host.classList.add('is-ready');
+    }
 
     function lockPageScroll() {
       regScrollY = window.scrollY || window.pageYOffset || 0;
+      var scrollbar = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.paddingRight = scrollbar > 0 ? scrollbar + 'px' : '';
+      document.documentElement.classList.add('reg-popup-open');
+      document.body.classList.add('reg-popup-open');
       document.body.style.top = '-' + regScrollY + 'px';
       document.body.style.left = '0';
       document.body.style.right = '0';
@@ -797,11 +865,14 @@
     }
 
     function unlockPageScroll() {
+      document.documentElement.classList.remove('reg-popup-open');
+      document.body.classList.remove('reg-popup-open');
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
       document.body.style.width = '';
+      document.body.style.paddingRight = '';
       window.scrollTo(0, regScrollY);
     }
 
@@ -809,12 +880,20 @@
       var popup = document.getElementById('reg-popup');
       if (!popup || !popup.classList.contains('is-open')) return;
       if (window.innerWidth > 760 || !window.visualViewport) {
-        resetRegPopupViewport();
+        popup.style.height = '';
+        popup.style.top = '';
         return;
       }
       popup.style.height = window.visualViewport.height + 'px';
       popup.style.top = window.visualViewport.offsetTop + 'px';
-      popup.style.bottom = 'auto';
+    }
+
+    function scheduleRegViewportFit() {
+      if (regViewportTimer) window.clearTimeout(regViewportTimer);
+      regViewportTimer = window.setTimeout(function () {
+        regViewportTimer = null;
+        fitRegPopupViewport();
+      }, 80);
     }
 
     function resetRegPopupViewport() {
@@ -822,14 +901,14 @@
       if (!popup) return;
       popup.style.height = '';
       popup.style.top = '';
-      popup.style.bottom = '';
     }
 
     function bootRegWidget() {
-      var host = document.getElementById('reg-widget-host');
+      var host = getRegWidgetHost();
       if (!host) return;
       if (host.querySelector('iframe')) {
         regWidgetBooted = true;
+        markRegWidgetReady();
         return;
       }
       var startName = 'startWidget' + REG_WIDGET.scriptId;
@@ -847,8 +926,11 @@
 
     function ensureRegWidget() {
       syncUtmToUrl();
-      var host = document.getElementById('reg-widget-host');
-      if (!host || host.querySelector('iframe')) return;
+      var host = getRegWidgetHost();
+      if (!host || host.querySelector('iframe')) {
+        markRegWidgetReady();
+        return;
+      }
 
       var script = document.getElementById(REG_WIDGET.scriptId);
       if (!script) {
@@ -866,30 +948,44 @@
       }
     }
 
+    function preloadRegWidget() {
+      if (regWidgetPreloading || regWidgetBooted) return;
+      regWidgetPreloading = true;
+      ensureRegWidget();
+    }
+
     function openRegPopup() {
       var popup = document.getElementById('reg-popup');
-      if (!popup) return;
-      ensureRegWidget();
+      if (!popup || popup.classList.contains('is-open')) return;
       lockPageScroll();
       popup.classList.add('is-open');
       popup.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('reg-popup-open');
       fitRegPopupViewport();
-      var closeBtn = popup.querySelector('.reg-popup-close');
-      if (closeBtn) closeBtn.focus();
+      ensureRegWidget();
+      requestAnimationFrame(function () {
+        var closeBtn = popup.querySelector('.reg-popup-close');
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
+      });
     }
 
     function closeRegPopup() {
       var popup = document.getElementById('reg-popup');
-      if (!popup) return;
+      if (!popup || !popup.classList.contains('is-open')) return;
       popup.classList.remove('is-open');
       popup.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('reg-popup-open');
       resetRegPopupViewport();
-      unlockPageScroll();
+      window.setTimeout(unlockPageScroll, 220);
+    }
+
+    function initRegWidgetMessages() {
+      window.addEventListener('message', function (e) {
+        if (!e.data || e.data.uniqName !== REG_WIDGET.scriptId || !e.data.height) return;
+        if (e.data.height > 80) markRegWidgetReady();
+      });
     }
 
     function initRegPopup() {
+      initRegWidgetMessages();
       document.querySelectorAll('.js-reg-open, a[href="#register"]').forEach(function (a) {
         a.classList.add('js-reg-open');
         a.addEventListener('click', function (e) {
@@ -904,11 +1000,15 @@
         if (e.key === 'Escape') closeRegPopup();
       });
       if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', fitRegPopupViewport);
-        window.visualViewport.addEventListener('scroll', fitRegPopupViewport);
+        window.visualViewport.addEventListener('resize', scheduleRegViewportFit);
+        window.visualViewport.addEventListener('scroll', scheduleRegViewportFit);
       }
-      window.addEventListener('resize', fitRegPopupViewport);
-      ensureRegWidget();
+      window.addEventListener('resize', scheduleRegViewportFit);
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(preloadRegWidget, { timeout: 2500 });
+      } else {
+        window.setTimeout(preloadRegWidget, 1800);
+      }
     }
 
     function initPage() {
