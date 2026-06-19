@@ -784,7 +784,7 @@
       } catch (e) {}
     }
 
-    var regWidgetLoaded = false;
+    var regWidgetBooted = false;
     var regScrollY = 0;
 
     function lockPageScroll() {
@@ -825,22 +825,51 @@
       popup.style.bottom = '';
     }
 
-    function loadRegWidget() {
-      if (regWidgetLoaded) return;
+    function bootRegWidget() {
       var host = document.getElementById('reg-widget-host');
-      if (!host || document.getElementById(REG_WIDGET.scriptId)) return;
+      if (!host) return;
+      if (host.querySelector('iframe')) {
+        regWidgetBooted = true;
+        return;
+      }
+      var startName = 'startWidget' + REG_WIDGET.scriptId;
+      var startFn = window[startName];
+      if (typeof startFn === 'function') {
+        startFn();
+        regWidgetBooted = true;
+        return;
+      }
+      try {
+        document.dispatchEvent(new Event('StartWidget' + REG_WIDGET.scriptId));
+        regWidgetBooted = true;
+      } catch (e) {}
+    }
+
+    function ensureRegWidget() {
       syncUtmToUrl();
-      var s = document.createElement('script');
-      s.id = REG_WIDGET.scriptId;
-      s.src = REG_WIDGET.src + '&rand=' + Date.now();
-      host.appendChild(s);
-      regWidgetLoaded = true;
+      var host = document.getElementById('reg-widget-host');
+      if (!host || host.querySelector('iframe')) return;
+
+      var script = document.getElementById(REG_WIDGET.scriptId);
+      if (!script) {
+        script = document.createElement('script');
+        script.id = REG_WIDGET.scriptId;
+        script.src = REG_WIDGET.src + '&rand=' + Date.now();
+        script.onload = bootRegWidget;
+        host.appendChild(script);
+        return;
+      }
+
+      bootRegWidget();
+      if (!host.querySelector('iframe')) {
+        script.addEventListener('load', bootRegWidget, { once: true });
+      }
     }
 
     function openRegPopup() {
       var popup = document.getElementById('reg-popup');
       if (!popup) return;
-      loadRegWidget();
+      ensureRegWidget();
       lockPageScroll();
       popup.classList.add('is-open');
       popup.setAttribute('aria-hidden', 'false');
@@ -879,6 +908,7 @@
         window.visualViewport.addEventListener('scroll', fitRegPopupViewport);
       }
       window.addEventListener('resize', fitRegPopupViewport);
+      ensureRegWidget();
     }
 
     function initPage() {
