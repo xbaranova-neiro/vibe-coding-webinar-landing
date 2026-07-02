@@ -128,8 +128,11 @@
     .btn-lg{ padding:19px 40px; font-size:16.5px; }
     .btn-sm{ padding:11px 22px; font-size:14px; }
     .btn-lbl{ display:inline; line-height:1.35; }
-    .btn-when{ font-weight:500; opacity:.88; white-space:nowrap; }
-    .btn [data-vb-hero-date]{ font-weight:500; opacity:.88; white-space:nowrap; }
+    .btn-when{ font-weight:700; white-space:nowrap; }
+    .btn [data-vb-hero-date]{ font-weight:700; white-space:nowrap; }
+    .btn-main .btn-lbl,
+    .btn-main .btn-when,
+    .btn-main [data-vb-hero-date]{ color:#fff; opacity:1; }
     .reg-btn-row{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:center; }
     .reg-btn-row--start{ justify-content:flex-start; }
 
@@ -377,7 +380,7 @@
     }
     .float-reg-btn:hover { animation: none; transform: scale(1.04); }
     .float-reg-btn-text { display: inline; font-weight: 700; line-height: 1.2; }
-    .float-reg-btn-text [data-vb-hero-date] { white-space: nowrap; font-weight: 500; opacity: 0.9; }
+    .float-reg-btn-text [data-vb-hero-date] { white-space: nowrap; font-weight: 700; opacity: 1; color: #fff; }
     @media (max-width: 760px) {
       .float-reg-stack {
         bottom: max(12px, env(safe-area-inset-bottom, 0px));
@@ -596,7 +599,7 @@
           </a>
           <div class="hero-acts reg-btn-row reg-btn-row--start">
             <a href="#" class="btn btn-main btn-lg" data-vb-open="morning"><span class="btn-lbl">Зарегистрироваться на 11:00 <span class="btn-when"><span data-vb-hero-date="morning"></span> →</span></span></a>
-            <a href="#" class="btn btn-glass btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span> →</span></span></a>
+            <a href="#" class="btn btn-main btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span> →</span></span></a>
             <a href="#program" class="btn btn-glass btn-lg">Программа</a>
           </div>
           <div class="hero-trust">
@@ -638,7 +641,7 @@
         </div>
         <div class="sec-cta reveal reg-btn-row">
           <a href="#" class="btn btn-main btn-lg" data-vb-open="morning"><span class="btn-lbl">Зарегистрироваться на 11:00 <span class="btn-when"><span data-vb-hero-date="morning"></span></span></span></a>
-          <a href="#" class="btn btn-glass btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
+          <a href="#" class="btn btn-main btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
         </div>
       </div>
     </div>
@@ -762,7 +765,7 @@
       </div>
       <div class="sec-cta reveal reg-btn-row">
         <a href="#" class="btn btn-main btn-lg" data-vb-open="morning"><span class="btn-lbl">Зарегистрироваться на 11:00 <span class="btn-when"><span data-vb-hero-date="morning"></span></span></span></a>
-        <a href="#" class="btn btn-glass btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
+        <a href="#" class="btn btn-main btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
       </div>
     </div>
   </section>
@@ -793,7 +796,7 @@
         <p class="cta-gifts-note reveal">Ссылку на эфир пришлём на почту и в бота</p>
         <div class="reg-btn-row">
           <a href="#" class="btn btn-main btn-lg" data-vb-open="morning"><span class="btn-lbl">Зарегистрироваться на 11:00 <span class="btn-when"><span data-vb-hero-date="morning"></span></span></span></a>
-          <a href="#" class="btn btn-glass btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
+          <a href="#" class="btn btn-main btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
         </div>
       </div>
     </div>
@@ -811,7 +814,7 @@
           <p class="site-footer-col-title">Занять место на эфире</p>
           <div class="site-footer-cta">
             <a href="#" class="btn btn-main btn-sm" data-vb-open="morning"><span class="btn-lbl">Регистрация на 11:00 МСК <span class="btn-when">· <span data-vb-hero-date="morning"></span></span></span></a>
-            <a href="#" class="btn btn-glass btn-sm" data-vb-open="evening"><span class="btn-lbl">Регистрация на 19:00 МСК <span class="btn-when">· <span data-vb-hero-date="evening"></span></span></span></a>
+            <a href="#" class="btn btn-main btn-sm" data-vb-open="evening"><span class="btn-lbl">Регистрация на 19:00 МСК <span class="btn-when">· <span data-vb-hero-date="evening"></span></span></span></a>
           </div>
           <div class="site-footer-links">
             <a href="https://xeniabaranova-school.ru/politica" target="_blank" rel="noopener noreferrer">Политика обработки данных</a>
