@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Бесплатный вебинар · 8 июля — Топ-7 способов вайб-кодинга</title>
-  <meta name="description" content="Бесплатный вебинар 8 июля в 11:00 и 19:00 МСК: топ-7 способов вайб-кодинга для жизни, семьи и работы — без программистов и кода.">
+  <title>Бесплатный вебинар — Топ-7 способов вайб-кодинга</title>
+  <meta name="description" content="Бесплатный вебинар в 11:00 и 19:00 МСК: топ-7 способов вайб-кодинга для жизни, семьи и работы — без программистов и кода.">
   <link rel="canonical" href="https://vibecoding.neiroguru.ru/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vibecoding.neiroguru.ru/">
-  <meta property="og:title" content="Бесплатный вебинар · 8 июля — Топ-7 способов вайб-кодинга">
-  <meta property="og:description" content="Покажем, как использовать вайб-кодинг в жизни, семье и работе — без программистов. 8 июля, 11:00 и 19:00 МСК.">
+  <meta property="og:title" content="Бесплатный вебинар — Топ-7 способов вайб-кодинга">
+  <meta property="og:description" content="Покажем, как использовать вайб-кодинг в жизни, семье и работе — без программистов. 11:00 и 19:00 МСК.">
   <meta property="og:image" content="https://vibecoding.neiroguru.ru/assets/og-image.jpg">
   <meta property="og:image:secure_url" content="https://vibecoding.neiroguru.ru/assets/og-image.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -19,8 +19,8 @@
   <meta property="og:locale" content="ru_RU">
   <link rel="image_src" href="https://vibecoding.neiroguru.ru/assets/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Бесплатный вебинар · 8 июля — Топ-7 способов вайб-кодинга">
-  <meta name="twitter:description" content="Покажем, как использовать вайб-кодинг в жизни, семье и работе — без программистов. 8 июля, 11:00 и 19:00 МСК.">
+  <meta name="twitter:title" content="Бесплатный вебинар — Топ-7 способов вайб-кодинга">
+  <meta name="twitter:description" content="Покажем, как использовать вайб-кодинг в жизни, семье и работе — без программистов. 11:00 и 19:00 МСК.">
   <meta name="twitter:image" content="https://vibecoding.neiroguru.ru/assets/og-image.jpg">
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -127,6 +127,11 @@
     .btn-glass:hover{ transform:translateY(-2px); }
     .btn-lg{ padding:19px 40px; font-size:16.5px; }
     .btn-sm{ padding:11px 22px; font-size:14px; }
+    .btn-lbl{ display:inline; line-height:1.35; }
+    .btn-when{ font-weight:500; opacity:.88; white-space:nowrap; }
+    .btn [data-vb-hero-date]{ font-weight:500; opacity:.88; white-space:nowrap; }
+    .reg-btn-row{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:center; }
+    .reg-btn-row--start{ justify-content:flex-start; }
 
     /* hero */
     .hero{ padding:40px 0 0; position:relative; z-index:1; background:#fff; overflow:hidden; }
@@ -351,9 +356,44 @@
       .site-footer-legal{ text-align:left; }
     }
 
-    .mobile-bar{ display:none; position:fixed; bottom:0; left:0; right:0; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--glass-2); backdrop-filter:blur(18px); border-top:1px solid var(--line); z-index:50; }
-    .mobile-bar .btn{ width:100%; justify-content:center; }
-    @media(max-width:760px){ .mobile-bar{display:block} body{padding-bottom:84px} }
+    @keyframes float-pulse {
+      0%, 100% { box-shadow: 0 8px 24px rgba(78,99,230,.42); }
+      50% { box-shadow: 0 8px 36px rgba(78,99,230,.62), 0 0 0 5px rgba(78,99,230,.12); }
+    }
+    .float-reg-stack {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9998;
+      display: none; flex-direction: column; align-items: stretch; gap: 8px;
+      max-width: min(360px, calc(100vw - 24px));
+    }
+    .float-reg-btn {
+      display: block; text-align: center; text-decoration: none;
+      font-weight: 700; font-size: 0.78rem; line-height: 1.2; padding: 0.55rem 1.1rem;
+      border-radius: 100px; cursor: pointer;
+      background: linear-gradient(120deg, var(--accent), #6E7DF0);
+      color: #fff !important; border: none;
+      box-shadow: 0 8px 24px rgba(78,99,230,.42);
+      animation: float-pulse 2.4s ease-in-out infinite;
+      -webkit-tap-highlight-color: rgba(78,99,230,.2);
+    }
+    .float-reg-btn:hover { animation: none; transform: scale(1.04); }
+    .float-reg-btn-text { display: inline; font-weight: 700; line-height: 1.2; }
+    .float-reg-btn-text [data-vb-hero-date] { white-space: nowrap; font-weight: 500; opacity: 0.9; }
+    @media (max-width: 760px) {
+      .float-reg-stack {
+        bottom: max(12px, env(safe-area-inset-bottom, 0px));
+        right: max(10px, env(safe-area-inset-right, 0px));
+        left: max(10px, env(safe-area-inset-left, 0px));
+        max-width: calc(100vw - 20px); gap: 10px;
+      }
+      .float-reg-btn { min-height: 48px; padding: 0.65rem 1.2rem; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
+      body.has-float-vb-cta { padding-bottom: 7rem; }
+    }
+    @media (min-width: 761px) {
+      .float-reg-stack { align-items: flex-end; }
+      .float-reg-btn { width: max-content; max-width: 100%; font-size: 0.8rem; padding: 0.55rem 1.5rem; }
+    }
+    .reg-gc-slot { width: 100%; overflow: hidden; clear: both; }
+    #reg-slot-evening { display: none; }
 
     /* registration popup (GetCourse widget) */
     .reg-popup{
@@ -428,8 +468,8 @@
     @keyframes reg-spin{ to{ transform:rotate(360deg); } }
     html.reg-popup-open,
     body.reg-popup-open{ overflow:hidden!important; overscroll-behavior:none; touch-action:none; }
-    body.reg-popup-open .mobile-bar{ opacity:0; pointer-events:none; }
-    .mobile-bar{ transition:opacity .2s ease; }
+    body.reg-popup-open .float-reg-stack{ opacity:0; pointer-events:none; }
+    .float-reg-stack{ transition:opacity .2s ease; }
     .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     @media(max-width:760px){
       .reg-popup{ align-items:flex-end; justify-content:stretch; padding:0; }
@@ -544,18 +584,19 @@
     <div class="wrap">
       <div class="hero-stage">
         <div class="hero-copy">
-          <span class="pill"><span class="dot"></span>Бесплатный онлайн-вебинар · 8 июля · 11:00 и 19:00 МСК</span>
+          <span class="pill"><span class="dot"></span>Бесплатный онлайн-вебинар · 11:00 и 19:00 МСК</span>
           <h1>Топ-7 способов использовать <span class="iri">вайб&#8209;кодинг</span> в&nbsp;жизни, семье, работе и&nbsp;своих идеях</h1>
           <p class="hero-sub">Покажем реальные примеры, которые можно повторить даже без опыта в программировании.</p>
           <a href="#register" class="hero-gift-card">
             <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><use href="#i-gift"/></svg></span>
             <span>
-              <span class="lbl">Подарок за регистрацию</span>
-              <span class="tt">50 идей приложений, сайтов и сервисов, которые можно собрать с помощью вайб‑кодинга</span>
+              <span class="lbl">Подарок после регистрации</span>
+              <span class="tt">Гид «Как зарабатывать в условиях 🍑»</span>
             </span>
           </a>
-          <div class="hero-acts">
-            <a href="#register" class="btn btn-main btn-lg">Принять участие бесплатно</a>
+          <div class="hero-acts reg-btn-row reg-btn-row--start">
+            <a href="#" class="btn btn-main btn-lg" data-vb-open="morning"><span class="btn-lbl">Зарегистрироваться на 11:00 <span class="btn-when"><span data-vb-hero-date="morning"></span> →</span></span></a>
+            <a href="#" class="btn btn-glass btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span> →</span></span></a>
             <a href="#program" class="btn btn-glass btn-lg">Программа</a>
           </div>
           <div class="hero-trust">
@@ -593,9 +634,12 @@
         <div class="good">
           <span class="good-label">Хорошая новость</span>
           <p>Сегодня многие такие идеи можно создавать самостоятельно с помощью вайб-кодинга.</p>
-          <p class="fin">Именно это мы покажем на вебинаре 8 июля.</p>
+          <p class="fin">Именно это мы покажем на ближайшем вебинаре.</p>
         </div>
-        <div class="sec-cta reveal"><a href="#register" class="btn btn-main btn-lg">Занять место на вебинаре</a></div>
+        <div class="sec-cta reveal reg-btn-row">
+          <a href="#" class="btn btn-main btn-lg" data-vb-open="morning"><span class="btn-lbl">Зарегистрироваться на 11:00 <span class="btn-when"><span data-vb-hero-date="morning"></span></span></span></a>
+          <a href="#" class="btn btn-glass btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
+        </div>
       </div>
     </div>
   </section>
@@ -716,7 +760,10 @@
           </div>
         </div>
       </div>
-      <div class="sec-cta reveal"><a href="#register" class="btn btn-main btn-lg">Зарегистрироваться на вебинар</a></div>
+      <div class="sec-cta reveal reg-btn-row">
+        <a href="#" class="btn btn-main btn-lg" data-vb-open="morning"><span class="btn-lbl">Зарегистрироваться на 11:00 <span class="btn-when"><span data-vb-hero-date="morning"></span></span></span></a>
+        <a href="#" class="btn btn-glass btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
+      </div>
     </div>
   </section>
 
@@ -734,17 +781,20 @@
         <span class="glow g1"></span><span class="glow g2"></span>
         <span class="eyebrow">Регистрация</span>
         <h2>Займите место в мире будущего</h2>
-        <p>8 июля в 11:00 и 19:00 (МСК) — покажем, как воплотить идею без программистов и больших бюджетов.</p>
-        <div class="meta"><div><svg class="m-ic" viewBox="0 0 24 24"><use href="#i-cal"/></svg>8 июля <span>· вебинар</span></div><div><svg class="m-ic" viewBox="0 0 24 24"><use href="#i-clock"/></svg>11:00 и 19:00 <span>· МСК</span></div></div>
+        <p>11:00 и 19:00 (МСК) — покажем, как воплотить идею без программистов и больших бюджетов.</p>
+        <div class="meta"><div><svg class="m-ic" viewBox="0 0 24 24"><use href="#i-clock"/></svg>11:00 и 19:00 <span>· МСК</span></div></div>
         <div class="cta-gift reveal">
           <span class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><use href="#i-gift"/></svg></span>
           <div>
-            <div class="lbl">Подарок за регистрацию</div>
-            <div class="tt">50 идей приложений, сайтов и сервисов, которые можно собрать с помощью вайб‑кодинга</div>
+            <div class="lbl">Подарок после регистрации</div>
+            <div class="tt">Гид «Как зарабатывать в условиях 🍑»</div>
           </div>
         </div>
-        <p class="cta-gifts-note reveal">Пришлём сразу после регистрации — для жизни, семьи и работы</p>
-        <a href="#register" class="btn btn-main btn-lg js-reg-open">Зарегистрироваться бесплатно</a>
+        <p class="cta-gifts-note reveal">Ссылку на эфир пришлём на почту и в бота</p>
+        <div class="reg-btn-row">
+          <a href="#" class="btn btn-main btn-lg" data-vb-open="morning"><span class="btn-lbl">Зарегистрироваться на 11:00 <span class="btn-when"><span data-vb-hero-date="morning"></span></span></span></a>
+          <a href="#" class="btn btn-glass btn-lg" data-vb-open="evening"><span class="btn-lbl">Зарегистрироваться на 19:00 <span class="btn-when"><span data-vb-hero-date="evening"></span></span></span></a>
+        </div>
       </div>
     </div>
   </section>
@@ -760,7 +810,8 @@
         <div>
           <p class="site-footer-col-title">Занять место на эфире</p>
           <div class="site-footer-cta">
-            <a href="#register" class="btn btn-main btn-sm">Зарегистрироваться бесплатно · 8 июля · 11:00 и 19:00 МСК</a>
+            <a href="#" class="btn btn-main btn-sm" data-vb-open="morning"><span class="btn-lbl">Регистрация на 11:00 МСК <span class="btn-when">· <span data-vb-hero-date="morning"></span></span></span></a>
+            <a href="#" class="btn btn-glass btn-sm" data-vb-open="evening"><span class="btn-lbl">Регистрация на 19:00 МСК <span class="btn-when">· <span data-vb-hero-date="evening"></span></span></span></a>
           </div>
           <div class="site-footer-links">
             <a href="https://xeniabaranova-school.ru/politica" target="_blank" rel="noopener noreferrer">Политика обработки данных</a>
@@ -775,7 +826,14 @@
     </div>
   </footer>
 
-  <div class="mobile-bar"><a href="#register" class="btn btn-main js-reg-open">Записаться бесплатно</a></div>
+  <div id="float-reg-stack" class="float-reg-stack" aria-label="Регистрация на эфир">
+    <a href="#" class="float-reg-btn" data-vb-open="morning">
+      <span class="float-reg-btn-text">Регистрация · 11:00 МСК · <span data-vb-hero-date="morning"></span></span>
+    </a>
+    <a href="#" class="float-reg-btn" data-vb-open="evening">
+      <span class="float-reg-btn-text">Регистрация · 19:00 МСК · <span data-vb-hero-date="evening"></span></span>
+    </a>
+  </div>
 
   <div class="reg-popup" id="reg-popup" aria-hidden="true">
     <button type="button" class="reg-popup-backdrop" data-reg-close aria-label="Закрыть"></button>
@@ -784,16 +842,30 @@
       <p id="reg-popup-title" class="sr-only">Регистрация на вебинар</p>
       <div class="reg-popup-widget" id="reg-widget-host">
         <div class="reg-popup-loader" aria-hidden="true"></div>
+        <div id="reg-slot-morning" class="reg-gc-slot">
+          <script
+            id="e04c03445c8ba4aec27ab796b60f0f071be8d545"
+            src="https://neyroseti.neiroguru.ru/pl/lite/widget/script?id=1603538"
+          ></script>
+        </div>
+        <div id="reg-slot-evening" class="reg-gc-slot">
+          <script
+            id="a8f9560ed2afaa8af661741fad2cba9bd600204e"
+            src="https://neyroseti.neiroguru.ru/pl/lite/widget/script?id=1603540"
+          ></script>
+        </div>
       </div>
     </div>
   </div>
 
+  <script src="assets/js/neiro-vb-landing.js"></script>
+
   <script src="assets/lottie.min.js" defer></script>
   <script>
-    /* GetCourse popup widget — форма внутри может быть ещё не готова, тест после настройки в GC */
-    var REG_WIDGET = {
-      scriptId: '1d51f4a68491fe69ee746c99c7f14d37944baa97',
-      src: 'https://xeniabaranova-school.ru/pl/lite/widget/script?id=1619826'
+    /* GetCourse: id=1603538 утро, id=1603540 вечер (neyroseti.neiroguru.ru) */
+    var REG_WIDGETS = {
+      morning: { scriptId: 'e04c03445c8ba4aec27ab796b60f0f071be8d545' },
+      evening: { scriptId: 'a8f9560ed2afaa8af661741fad2cba9bd600204e' }
     };
 
     function bootHeroVideo() {
@@ -926,8 +998,6 @@
       } catch (e) {}
     }
 
-    var regWidgetBooted = false;
-    var regWidgetPreloading = false;
     var regScrollY = 0;
     var regViewportTimer = null;
 
@@ -993,55 +1063,14 @@
       popup.style.top = '';
     }
 
-    function bootRegWidget() {
-      var host = getRegWidgetHost();
-      if (!host) return;
-      if (host.querySelector('iframe')) {
-        regWidgetBooted = true;
-        markRegWidgetReady();
-        return;
-      }
-      var startName = 'startWidget' + REG_WIDGET.scriptId;
-      var startFn = window[startName];
-      if (typeof startFn === 'function') {
-        startFn();
-        regWidgetBooted = true;
-        return;
-      }
-      try {
-        document.dispatchEvent(new Event('StartWidget' + REG_WIDGET.scriptId));
-        regWidgetBooted = true;
-      } catch (e) {}
-    }
-
-    function ensureRegWidget() {
-      syncUtmToUrl();
-      var host = getRegWidgetHost();
-      if (!host || host.querySelector('iframe')) {
-        markRegWidgetReady();
-        return;
-      }
-
-      var script = document.getElementById(REG_WIDGET.scriptId);
-      if (!script) {
-        script = document.createElement('script');
-        script.id = REG_WIDGET.scriptId;
-        script.src = REG_WIDGET.src + '&rand=' + Date.now();
-        script.onload = bootRegWidget;
-        host.appendChild(script);
-        return;
-      }
-
-      bootRegWidget();
-      if (!host.querySelector('iframe')) {
-        script.addEventListener('load', bootRegWidget, { once: true });
-      }
-    }
-
-    function preloadRegWidget() {
-      if (regWidgetPreloading || regWidgetBooted) return;
-      regWidgetPreloading = true;
-      ensureRegWidget();
+    function openRegForm(slot) {
+      var morning = document.getElementById('reg-slot-morning');
+      var evening = document.getElementById('reg-slot-evening');
+      if (!morning || !evening) return;
+      var isEvening = slot === 'evening';
+      morning.style.display = isEvening ? 'none' : 'block';
+      evening.style.display = isEvening ? 'block' : 'none';
+      openRegPopup();
     }
 
     function openRegPopup() {
@@ -1051,7 +1080,7 @@
       popup.classList.add('is-open');
       popup.setAttribute('aria-hidden', 'false');
       fitRegPopupViewport();
-      ensureRegWidget();
+      if (getRegWidgetHost() && getRegWidgetHost().querySelector('iframe')) markRegWidgetReady();
       requestAnimationFrame(function () {
         var closeBtn = popup.querySelector('.reg-popup-close');
         if (closeBtn) closeBtn.focus({ preventScroll: true });
@@ -1069,20 +1098,15 @@
 
     function initRegWidgetMessages() {
       window.addEventListener('message', function (e) {
-        if (!e.data || e.data.uniqName !== REG_WIDGET.scriptId || !e.data.height) return;
-        if (e.data.height > 80) markRegWidgetReady();
+        if (!e.data || !e.data.height) return;
+        var ids = [REG_WIDGETS.morning.scriptId, REG_WIDGETS.evening.scriptId];
+        if (ids.indexOf(e.data.uniqName) !== -1 && e.data.height > 80) markRegWidgetReady();
       });
     }
 
     function initRegPopup() {
+      syncUtmToUrl();
       initRegWidgetMessages();
-      document.querySelectorAll('.js-reg-open, a[href="#register"]').forEach(function (a) {
-        a.classList.add('js-reg-open');
-        a.addEventListener('click', function (e) {
-          e.preventDefault();
-          openRegPopup();
-        });
-      });
       document.querySelectorAll('[data-reg-close]').forEach(function (el) {
         el.addEventListener('click', closeRegPopup);
       });
@@ -1094,10 +1118,15 @@
         window.visualViewport.addEventListener('scroll', scheduleRegViewportFit);
       }
       window.addEventListener('resize', scheduleRegViewportFit);
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(preloadRegWidget, { timeout: 2500 });
-      } else {
-        window.setTimeout(preloadRegWidget, 1800);
+
+      var floatStack = document.getElementById('float-reg-stack');
+      if (floatStack) {
+        floatStack.style.display = 'flex';
+        document.body.classList.add('has-float-vb-cta');
+      }
+
+      if (window.VIBE_VB) {
+        window.VIBE_VB.init({ openRegModal: openRegForm });
       }
     }
 
